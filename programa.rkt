@@ -30,6 +30,15 @@
         (get-system-actual-drive sys)
         (get-system-actual-route sys)))
 
+(define (set-system-actual-user sys user)
+    (make-system
+        (get-system-name sys)
+        (get-system-users sys)
+        (get-system-drives sys)
+        user
+        (get-system-actual-drive sys)
+        (get-system-actual-route sys)))
+
 
 (define (set-system-drives sys drives)
     (make-system 
@@ -39,6 +48,7 @@
         (get-system-actual-user sys)
         (get-system-actual-drive sys)
         (get-system-actual-route sys)))
+
 ;; Terminar de crear los getters
 
 (define (system name)
@@ -79,6 +89,10 @@
     )
 
 
+
+(define (login sys user)
+    (if (member user (get-system-users sys)) (set-system-actual-user sys user) (sys)))
+
 (define S0 (system "newSystem"))
 (get-system-actual-route S0)
 
@@ -109,7 +123,10 @@
 (define S6
     (add-drive S5 "D" "Hola" 10000))
 
-(get-system-drives S6)
+(define S7
+    (login S6 "dross"))
+
+(get-system-actual-user S7)
 
 
 

@@ -1,97 +1,131 @@
 #lang racket
 
 (define (make-system name users drives actual-user actual-drive actual-route )
-    (list name users drives actual-user actual-drive actual-route))
+  (list name users drives actual-user actual-drive actual-route))
 
 (define (get-system-name sys)
-    (car sys))
+  (car sys))
 
 (define (get-system-users sys)
-    (cadr sys))
+  (cadr sys))
 
 (define (get-system-drives sys)
-    (caddr sys))
+  (caddr sys))
 
 (define (get-system-actual-user sys)
-    (cadddr sys))
+  (cadddr sys))
 
 (define (get-system-actual-drive sys)
-    (cadddr (cdr sys)))
+  (cadddr (cdr sys)))
 
 (define (get-system-actual-route sys)
-    (cadddr (cddr sys)))
+  (cadddr (cddr sys)))
 
 (define (set-system-users sys users)
-    (make-system
-        (get-system-name sys)
-        users
-        (get-system-drives sys)
-        (get-system-actual-user sys)
-        (get-system-actual-drive sys)
-        (get-system-actual-route sys)))
+  (make-system
+   (get-system-name sys)
+   users
+   (get-system-drives sys)
+   (get-system-actual-user sys)
+   (get-system-actual-drive sys)
+   (get-system-actual-route sys)))
 
 (define (set-system-actual-user sys user)
-    (make-system
-        (get-system-name sys)
-        (get-system-users sys)
-        (get-system-drives sys)
-        user
-        (get-system-actual-drive sys)
-        (get-system-actual-route sys)))
+  (make-system
+   (get-system-name sys)
+   (get-system-users sys)
+   (get-system-drives sys)
+   user
+   (get-system-actual-drive sys)
+   (get-system-actual-route sys)))
 
 
 (define (set-system-drives sys drives)
-    (make-system 
-        (get-system-name sys)
-        (get-system-users sys)
-        drives
-        (get-system-actual-user sys)
-        (get-system-actual-drive sys)
-        (get-system-actual-route sys)))
+  (make-system 
+   (get-system-name sys)
+   (get-system-users sys)
+   drives
+   (get-system-actual-user sys)
+   (get-system-actual-drive sys)
+   (get-system-actual-route sys)))
+
+(define (set-system-actual-drive sys drive)
+  (make-system 
+   (get-system-name sys)
+   (get-system-users sys)
+   (get-system-drives sys)
+   (get-system-actual-user sys)
+   drive
+   (get-system-actual-route sys)))
 
 ;; Terminar de crear los getters
 
 (define (system name)
-    (make-system name null null null null null))
+  (make-system name null null null null null))
+
+
 
 
 
 (define (add-user-to-users user-list user)
-    (reverse (cons user (reverse user-list))))
+  (reverse (cons user (reverse user-list))))
 ;;(define (register system name)
 
 (define (register sys user)
-    (if (member user (get-system-users sys)) sys 
-    (set-system-users sys (add-user-to-users (get-system-users sys) user))))
+  (if (member user (get-system-users sys)) sys 
+      (set-system-users sys (add-user-to-users (get-system-users sys) user))))
 
 
 
 (define (make-drive letter name capacity content)
-    (list letter name capacity content))
+  (list letter name capacity content))
 
 (define (get-drive-letter drive)
-    (car drive))
+  (car drive))
 
 (define (get-drive-name drive)
-    (cadr drive))
+  (cadr drive))
 
 (define (get-drive-capacity drive)
-    (caddr drive))
+  (caddr drive))
 
 (define (get-drive-content drive)
-    (cadddr drive))
+  (cadddr drive))
 
 (define (add-drive-to-drives drives new-drive)
-    (reverse (cons new-drive (reverse drives))))
+  (reverse (cons new-drive (reverse drives))))
+
+(define (check-if-drive-exists drives letter)
+  (if (null? drives)
+    #f
+    (if (equal? letter (car (car drives)))
+      #t
+      (check-if-drive-exists (cdr drives) letter))))
+
+(define (switch-drive sys letter)
+  (if (null? (get-system-actual-user sys))
+    sys
+    (if (check-if-drive-exists (get-system-drives sys) letter)
+      (set-system-actual-drive sys letter)
+      sys)))
+
+;;(define (get-drives-drive drives letter)
+;;    (if (equal? (car drives) letter)))
+
 
 (define (add-drive sys letter name capacity)
-    (set-system-drives sys (add-drive-to-drives (get-system-drives sys) (make-drive letter name capacity null))) 
-    )
+  (set-system-drives sys (add-drive-to-drives (get-system-drives sys) (make-drive letter name capacity null))) 
+  )
 
 
 
 (define (login sys user)
-    (if (member user (get-system-users sys)) (set-system-actual-user sys user) (sys)))
+  (if (member user (get-system-users sys)) (set-system-actual-user sys user) (sys)))
+
+(define (logout sys)
+  (set-system-actual-user sys null))
+;;(define (switch-drive ))
+
 
 (define S0 (system "newSystem"))
 (get-system-actual-route S0)
@@ -106,27 +140,38 @@
 
 
 (define S1
-    (register S0 "juan"))
+  (register S0 "juan"))
 
 (define S2
-    (register S1 "dross"))
+  (register S1 "dross"))
 
 (define S3
-    (register S2 "COÑOOOOOOOOO"))
+  (register S2 "COÑOOOOOOOOO"))
 
 (define S4
-    (register S3 "dross"))
+  (register S3 "dross"))
 
 (define S5
-    (add-drive S4 "C" "Holi" 1000))
+  (add-drive S4 "C" "Holi" 1000))
 
 (define S6
-    (add-drive S5 "D" "Hola" 10000))
+  (add-drive S5 "D" "Hola" 10000))
 
 (define S7
-    (login S6 "dross"))
+  (login S6 "dross"))
 
-(get-system-actual-user S7)
+(define S8
+  (switch-drive S7 "E"))
+
+(define S9
+  (switch-drive S8 "E"))
+
+(define S10
+  (logout S9))
+
+(define S11
+  (switch-drive S10 "C"))
 
 
+(get-system-actual-drive S11)
 

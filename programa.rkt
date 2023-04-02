@@ -1,7 +1,21 @@
 #lang racket
+(require racket/date)
 
-(define (make-system name users drives actual-user actual-drive actual-route )
-  (list name users drives actual-user actual-drive actual-route))
+(define (date-string fecha)
+  (format "~a-~a-~a ~a:~a:~a"
+    (date-day fecha)
+    (date-month fecha)
+    (date-year fecha)
+    (date-hour fecha)
+    (date-minute fecha)
+    (date-second fecha))
+)
+
+(define (get-date)
+  (date-string (current-date)))
+
+(define (make-system name users drives actual-user actual-drive actual-route creation-date modification-date)
+  (list name users drives actual-user actual-drive actual-route creation-date modification-date))
 
 (define (get-system-name sys)
   (car sys))
@@ -21,6 +35,12 @@
 (define (get-system-actual-route sys)
   (cadddr (cddr sys)))
 
+(define (get-system-creation-date sys)
+  (cadddr (cdddr sys)))
+
+(define (get-system-modification-date sys)
+  (cadddr (cdddr (cdr sys))))
+
 (define (set-system-users sys users)
   (make-system
    (get-system-name sys)
@@ -28,17 +48,9 @@
    (get-system-drives sys)
    (get-system-actual-user sys)
    (get-system-actual-drive sys)
-   (get-system-actual-route sys)))
-
-(define (set-system-actual-user sys user)
-  (make-system
-   (get-system-name sys)
-   (get-system-users sys)
-   (get-system-drives sys)
-   user
-   (get-system-actual-drive sys)
-   (get-system-actual-route sys)))
-
+   (get-system-actual-route sys)
+   (get-system-creation-date sys)
+   (get-system-modification-date sys)))
 
 (define (set-system-drives sys drives)
   (make-system 
@@ -47,7 +59,20 @@
    drives
    (get-system-actual-user sys)
    (get-system-actual-drive sys)
-   (get-system-actual-route sys)))
+   (get-system-actual-route sys)
+   (get-system-creation-date sys)
+   (get-system-modification-date sys)))
+
+(define (set-system-actual-user sys user)
+  (make-system
+   (get-system-name sys)
+   (get-system-users sys)
+   (get-system-drives sys)
+   user
+   (get-system-actual-drive sys)
+   (get-system-actual-route sys)
+   (get-system-creation-date sys)
+   (get-system-modification-date sys)))
 
 (define (set-system-actual-drive sys drive)
   (make-system 
@@ -56,15 +81,48 @@
    (get-system-drives sys)
    (get-system-actual-user sys)
    drive
-   (get-system-actual-route sys)))
+   (get-system-actual-route sys)
+   (get-system-creation-date sys)
+   (get-system-modification-date sys)))
 
+(define (set-system-actual-route sys route)
+  (make-system 
+   (get-system-name sys)
+   (get-system-users sys)
+   (get-system-drives sys)
+   (get-system-actual-user sys)
+   (get-system-actual-drive sys)
+   route
+   (get-system-creation-date sys)
+   (get-system-modification-date sys))
+  )
+
+;; Probably useless
+(define (set-system-creation-date sys)
+  (make-system 
+   (get-system-name sys)
+   (get-system-users sys)
+   (get-system-drives sys)
+   (get-system-actual-user sys)
+   (get-system-actual-drive sys)
+   (get-system-actual-route sys)
+   (get-date)
+   (get-system-modification-date sys)))
+
+(define (set-system-modification-date sys)
+  (make-system 
+   (get-system-name sys)
+   (get-system-users sys)
+   (get-system-drives sys)
+   (get-system-actual-user sys)
+   (get-system-actual-drive sys)
+   (get-system-actual-route sys)
+   (get-system-creation-date sys)
+   (get-date)))
 ;; Terminar de crear los getters
 
 (define (system name)
-  (make-system name null null null null null))
-
-
-
+  (make-system name null null null null null (get-date) (get-date)))
 
 
 (define (add-user-to-users user-list user)
@@ -73,9 +131,12 @@
 
 (define (register sys user)
   (if (member user (get-system-users sys)) sys 
-      (set-system-users sys (add-user-to-users (get-system-users sys) user))))
-
-
+      (set-system-modification-date
+        (set-system-users
+          sys
+          (add-user-to-users
+            (get-system-users sys)
+            user)))))
 
 (define (make-drive letter name capacity content)
   (list letter name capacity content))
@@ -114,17 +175,26 @@
 
 
 (define (add-drive sys letter name capacity)
-  (set-system-drives sys (add-drive-to-drives (get-system-drives sys) (make-drive letter name capacity null))) 
-  )
+  (set-system-modification-date 
+    (set-system-drives 
+      sys 
+      (add-drive-to-drives
+        (get-system-drives sys)
+        (make-drive letter name capacity null))) 
+  ))
 
 
 
 (define (login sys user)
-  (if (member user (get-system-users sys)) (set-system-actual-user sys user) (sys)))
+  (if (member user (get-system-users sys))
+    (set-system-actual-user sys user)
+    (sys)))
 
 (define (logout sys)
   (set-system-actual-user sys null))
 ;;(define (switch-drive ))
+
+
 
 
 (define S0 (system "newSystem"))
@@ -174,4 +244,4 @@
 
 
 (get-system-actual-drive S11)
-
+(get-system-modification-date S11)

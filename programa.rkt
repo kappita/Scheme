@@ -1,6 +1,7 @@
 #lang racket
 (require racket/date)
 
+
 (define (date-string fecha)
   (format "~a-~a-~a ~a:~a:~a"
     (date-day fecha)
@@ -194,6 +195,60 @@
   (set-system-actual-user sys null))
 ;;(define (switch-drive ))
 
+(define (make-folder type name author content creation-date modification-date size security shared-users encryption-fn decryption-fn password)
+  (list 
+    type
+    name
+    author
+    content
+    creation-date
+    modification-date
+    size
+    security
+    shared-users
+    encryption-fn
+    decryption-fn
+    password))
+
+(define (get-folder-name folder)
+  (cadr folder))
+
+(define (get-folder-author folder)
+  (caddr folder))
+
+(define (get-folder-content folder)
+  (cadddr folder))
+
+(define (get-folder-creation-date folder)
+  (cadddr (cdr(folder))))
+
+(define (get-folder-modification-date folder)
+  (cadddr (cddr(folder))))
+
+(define (get-folder-size folder)
+  (cadddr (cdddr (folder))))
+
+(define (get-folder-security folder)
+  (cadddr (cdddr (cdr (folder)))))
+
+(define (get-folder-shared-users folder)
+  (cadddr (cdddr (cddr (folder)))))
+
+(define (get-folder-encryption-fn folder)
+  (cadddr (cdddr (cdddr (folder)))))
+
+(define (get-folder-decryption-fn folder)
+  (cadddr (cdddr (cdddr (cdr (folder))))))
+
+(define (get-folder-password folder)
+  (cadddr (cdddr (cdddr (cddr (folder))))))
+
+
+
+
+(define (get-route route)
+  (regexp-split "/" route)
+  )
 
 
 
@@ -245,3 +300,4 @@
 
 (get-system-actual-drive S11)
 (get-system-modification-date S11)
+

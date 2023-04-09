@@ -1,8 +1,16 @@
 #lang racket
 (provide (all-defined-out))
 
-(define (check-if-exists folder name)
-    )
 
-(define (check-if-folder-exists ))
+(define (get-element-type element)
+  (car element))
+
+(define (get-element-name element)
+  (cadr element))
+
+(define (get-element-author element)
+  (caddr element))
+
+(define (get-element-content element)
+  (cadddr element))
 

@@ -14,6 +14,11 @@
 (define (get-drive-pos drives letter)
   (get-drive-pos-cola drives letter 0))
 
+(define (get-drive-by-letter drives letter)
+  (if (equal? letter (get-drive-letter (car drives)))
+    (car drives)
+    (get-drive-by-letter (cdr drives) letter)))
+
 
 (define (add-drive-to-drives drives new-drive)
   (reverse (cons new-drive (reverse drives))))
@@ -34,9 +39,9 @@
       (cons drive (cdr drives))
       (cons (car drives) (set-drives-drive (cdr drives letter drive))))))
 
-(define (set-to-route-drives drives route element)
+(define (add-to-route-drives drives route element)
   (if (check-if-drive-exists drives (car route))
-    (set-drives-drive drives (car route) (set-to-route-drive drive route element))
+    (set-drives-drive drives (car route) (add-to-route-drive (get-drive-by-letter drives (car route)) (cdr route) element))
     drives
   ))
 

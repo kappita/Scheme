@@ -195,20 +195,14 @@
     (get-folder-decryption-fn folder)
     new-password))
 
-;; Dom: Folder X FolderName
-;; Rec: Folder or File
-(define (get-folder-folder folder name)
-  (if (null? folder)
-    null
-    (if (equal? name (get-folder-name (car (get-folder-content folder))))
-      (cons drive (cdr drives))
-      (cons (car drives) (set-drives-drive (cdr drives letter drive))))))
 
-(define (set-folder-by-name))
+(define (set-folder-content-by-name folder name)
+  (set-folder-content folder ))
 
 (define (add-element-to-folder folder element)
   (set-folder-content folder 
     (reverse (cons element (reverse get-folder-content folder)))))
+
 
 (define (add-to-route-folder folder route element)
   (if (null? route)

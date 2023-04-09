@@ -1,6 +1,7 @@
 #lang racket
 (provide (all-defined-out))
 (require "folder.rkt")
+(require "element.rkt")
 
 (define (make-drive letter name capacity content)
   (list letter name capacity content))
@@ -45,15 +46,36 @@
     (get-drive-name drive)
     (get-drive-capacity drive)
     content))
-  
+
+;,
+(define (get-drive-element-by-name drive-contents name)
+  (if (equal? name (get-element-name (car drive-contents)))
+    (car drive-contents)
+    (get-drive-element-by-name (cdr drive-contents) name)))
+
+(define (set-content-element-by-name drive-contents name element)
+  (if (null? drive-contents)
+    drive-contents
+    (if (equal? name (get-element-name (car drive-contents)))
+      (cons element (cdr drive-contents))
+      (cons (car drive-contents) (set-drives-drive (cdr drives letter drive))))))
+
+(define (set-drive-contents-by-name drive name element)
+  (set-drive-content drive (set-content-element-by-name (get-drive-content drive) name element)))
+
+
+
+
+
+
 (define (add-element-to-drive drive element)
   (set-drive-content drive 
   (reverse (cons element (reverse get-drive-content drive)))))
 
-(define (set-to-route-drive drive route element)
+(define (add-to-route-drive drive route element)
   (if (null? route)
     (add-element-to-drive drive element)
-    (set-to-route-folder )))
+    (set-drive-contents-by-name drive name (add-to-route-folder (get-drive-element-by-name (car route)) (cdr route) element))))
     
 
 

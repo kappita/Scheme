@@ -1,5 +1,6 @@
 #lang racket
 (provide (all-defined-out))
+(require "element.rkt")
 
 
 (define (make-folder type name author content creation-date modification-date size security shared-users encryption-fn decryption-fn password)
@@ -195,9 +196,19 @@
     (get-folder-decryption-fn folder)
     new-password))
 
+(define (get-content-element-by-name folder name)
+  (if (null? folder)
+    null
+    (if (equal? name (get-folder-name (car folder)))
+      (car folder)
+      (get-content-element-by-name (cdr folder) name))))
 
-(define (set-folder-content-by-name folder name)
-  (set-folder-content folder ))
+(define (set-folder-content-by-name folder-contents name element)
+  (if (null? folder-contents)
+    folder-contents
+    (if (equal? name (get-element-name (car folder-contents)))
+      (cons element (cdr folder-contents))
+      (cons (car folder-contents) (set-folder-content-by-name (cdr folder-contents name element))))))
 
 (define (add-element-to-folder folder element)
   (set-folder-content folder 
@@ -207,4 +218,4 @@
 (define (add-to-route-folder folder route element)
   (if (null? route)
     (add-element-to-folder folder element)
-    ()))
+    (set-folder-content-by-name folder (car route) (add-to-route-folder (get-content-element-by-name (get-folder-content folder) (car route)) (cdr route) element))))

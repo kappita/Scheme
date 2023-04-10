@@ -49,22 +49,21 @@
 
 ;,
 (define (get-drive-element-by-name drive-contents name)
-  (if (equal? name (get-element-name (car drive-contents)))
-    (car drive-contents)
-    (get-drive-element-by-name (cdr drive-contents) name)))
+  (if (null? drive-contents)
+    null
+    (if (equal? name (get-element-name (car drive-contents)))
+      (car drive-contents)
+      (get-drive-element-by-name (cdr drive-contents) name))))
 
 (define (set-content-element-by-name drive-contents name element)
   (if (null? drive-contents)
     drive-contents
     (if (equal? name (get-element-name (car drive-contents)))
       (cons element (cdr drive-contents))
-      (cons (car drive-contents) (set-drives-drive (cdr drives letter drive))))))
+      (cons (car drive-contents) (set-content-element-by-name (cdr drive-contents) name element)))))
 
 (define (set-drive-contents-by-name drive name element)
   (set-drive-content drive (set-content-element-by-name (get-drive-content drive) name element)))
-
-
-
 
 
 
@@ -75,9 +74,5 @@
 (define (add-to-route-drive drive route element)
   (if (null? route)
     (add-element-to-drive drive element)
-    (set-drive-contents-by-name drive name (add-to-route-folder (get-drive-element-by-name (car route)) (cdr route) element))))
+    (set-drive-contents-by-name drive (car route) (add-to-route-folder (get-drive-element-by-name (get-drive-content drive) (car route)) (cdr route) element))))
     
-
-
-
-

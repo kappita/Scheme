@@ -2,10 +2,12 @@
 (require racket/date)
 (require "date.rkt")
 (require "drive.rkt")
+(require "drives.rkt")
 (require "system.rkt")
 (require "date.rkt")
 (require "folder.rkt")
 (require "user.rkt")
+(require "element.rkt")
 
 
 
@@ -60,7 +62,7 @@
 ;;(define (switch-drive ))
 
 (define (md sys name)
-  (set-system-drives sys ))
+  (set-system-drives sys (add-to-route-drives (get-system-drives sys) (get-system-actual-route sys) (make-folder "folder" name null (get-system-actual-user sys) (get-date) (get-date) 0 0 '() null null null))))
 
 
 
@@ -94,22 +96,27 @@
   (add-drive S4 #\C "Holi" 1000))
 
 (define S6
-  (add-drive S5 "D" "Hola" 10000))
+  (add-drive S5 #\D "Hola" 10000))
 
 (define S7
   (login S6 "dross"))
 
 (define S8
-  (switch-drive S7 "E"))
+  (switch-drive S7 #\C))
 
 (define S9
-  (switch-drive S8 "E"))
+  (switch-drive S8 #\C))
 
 (define S10
   (logout S9))
 
 (define S11
   (switch-drive S10 "C"))
+
+(get-system-actual-drive S11)
+
+(define S12
+  (md S11 "bruh"))
 
 
 (get-system-actual-drive S11)

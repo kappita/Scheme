@@ -44,4 +44,8 @@
     (set-drives-drive drives (car route) (add-to-route-drive (get-drive-by-letter drives (car route)) (cdr route) element))
     drives
   ))
-  
+
+
+
+;;
+;; Rec: Bool

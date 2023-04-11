@@ -8,6 +8,7 @@
 (require "folder.rkt")
 (require "user.rkt")
 (require "element.rkt")
+(require "path.rkt")
 
 
 
@@ -34,7 +35,7 @@
   (if (null? (get-system-actual-user sys))
     sys
     (if (check-if-drive-exists (get-system-drives sys) letter)
-      (set-system-actual-drive sys letter)
+      (set-system-actual-route (set-system-actual-drive sys letter)  (list letter))
       sys)))
 
 ;;(define (get-drives-drive drives letter)
@@ -51,7 +52,6 @@
   ))
 
 
-
 (define (login sys user)
   (if (member user (get-system-users sys))
     (set-system-actual-user sys user)
@@ -62,8 +62,30 @@
 ;;(define (switch-drive ))
 
 (define (md sys name)
-  (set-system-drives sys (add-to-route-drives (get-system-drives sys) (get-system-actual-route sys) (make-folder "folder" name null (get-system-actual-user sys) (get-date) (get-date) 0 0 '() null null null))))
+  (set-system-drives
+    sys 
+    (add-to-route-drives 
+      (get-system-drives sys)
+      (get-system-actual-route sys)
+      (make-folder
+        name
+        (get-system-actual-user sys)
+        '()
+        (get-date)
+        (get-date)
+        0
+        0
+        '()
+        null
+        null
+        null))))
 
+(define (cd sys path)
+  (if (equal? path "/")
+    (set-system-actual-route sys (list (get-system-actual-drive sys)))
+    (if (equal? path "..")
+      (set-system-actual-route sys (reverse (cdr (reverse (get-system-actual-route sys)))))
+      (set-system-actual-route sys (reverse (cons path (reverse (get-system-actual-route sys))))))))
 
 
 
@@ -99,7 +121,7 @@
   (add-drive S5 #\D "Hola" 10000))
 
 (define S7
-  (login S6 "dross"))
+  (login S6 "juan"))
 
 (define S8
   (switch-drive S7 #\C))
@@ -107,19 +129,22 @@
 (define S9
   (switch-drive S8 #\C))
 
+
 (define S10
-  (logout S9))
+  (switch-drive S9 "C"))
 
+(get-system-actual-route S10)
+(get-system-drives S10)
+(get-date)
+
+(get-system-users S10)
+(set-system-drives S10 (get-system-drives S10))
 (define S11
-  (switch-drive S10 "C"))
-
-(get-system-actual-drive S11)
+  (md S10 "bruh"))
 
 (define S12
-  (md S11 "bruh"))
+  (cd S11 "bruh"))
 
-
-(get-system-actual-drive S11)
-(get-system-modification-date S11)
-(get-system-drives S11)
-
+(define S13
+  (md S12 "bruh2"))
+(get-system-drives S13)

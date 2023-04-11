@@ -69,10 +69,13 @@
 
 (define (add-element-to-drive drive element)
   (set-drive-content drive 
-  (reverse (cons element (reverse get-drive-content drive)))))
+  (reverse (cons element (reverse (get-drive-content drive))))))
 
 (define (add-to-route-drive drive route element)
   (if (null? route)
     (add-element-to-drive drive element)
     (set-drive-contents-by-name drive (car route) (add-to-route-folder (get-drive-element-by-name (get-drive-content drive) (car route)) (cdr route) element))))
+
+
+
     

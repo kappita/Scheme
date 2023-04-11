@@ -1,11 +1,12 @@
 #lang racket
 (provide (all-defined-out))
 (require "element.rkt")
+(require "date.rkt")
 
 
-(define (make-folder type name author content creation-date modification-date size security shared-users encryption-fn decryption-fn password)
+(define (make-folder name author content creation-date modification-date size security shared-users encryption-fn decryption-fn password)
   (list 
-    type
+    "folder"
     name
     author
     content
@@ -29,28 +30,28 @@
   (cadddr folder))
 
 (define (get-folder-creation-date folder)
-  (cadddr (cdr(folder))))
+  (cadddr (cdr folder)))
 
 (define (get-folder-modification-date folder)
-  (cadddr (cddr(folder))))
+  (cadddr (cddr folder)))
 
 (define (get-folder-size folder)
-  (cadddr (cdddr (folder))))
+  (cadddr (cdddr folder)))
 
 (define (get-folder-security folder)
-  (cadddr (cdddr (cdr (folder)))))
+  (cadddr (cdddr (cdr folder))))
 
 (define (get-folder-shared-users folder)
-  (cadddr (cdddr (cddr (folder)))))
+  (cadddr (cdddr (cddr folder))))
 
 (define (get-folder-encryption-fn folder)
-  (cadddr (cdddr (cdddr (folder)))))
+  (cadddr (cdddr (cdddr folder))))
 
 (define (get-folder-decryption-fn folder)
-  (cadddr (cdddr (cdddr (cdr (folder))))))
+  (cadddr (cdddr (cdddr (cdr folder)))))
 
 (define (get-folder-password folder)
-  (cadddr (cdddr (cdddr (cddr (folder))))))
+  (cadddr (cdddr (cdddr (cddr folder)))))
 
 (define (set-folder-name folder new-name)
   (make-folder
@@ -58,7 +59,7 @@
     (get-folder-author folder)
     (get-folder-content folder)
     (get-folder-creation-date folder)
-    (get-folder-modification-date folder)
+    (get-date)
     (get-folder-size folder)
     (get-folder-security folder)
     (get-folder-shared-users folder)
@@ -74,7 +75,7 @@
     new-author
     (get-folder-content folder)
     (get-folder-creation-date folder)
-    (get-folder-modification-date folder)
+    (get-date)
     (get-folder-size folder)
     (get-folder-security folder)
     (get-folder-shared-users folder)
@@ -88,7 +89,7 @@
     (get-folder-author folder)
     new-content
     (get-folder-creation-date folder)
-    (get-folder-modification-date folder)
+    (get-date)
     (get-folder-size folder)
     (get-folder-security folder)
     (get-folder-shared-users folder)
@@ -104,7 +105,7 @@
     (get-folder-author folder)
     (get-folder-content folder)
     date
-    (get-folder-modification-date folder)
+    (get-date)
     (get-folder-size folder)
     (get-folder-security folder)
     (get-folder-shared-users folder)
@@ -118,7 +119,7 @@
     (get-folder-author folder)
     (get-folder-content folder)
     (get-folder-creation-date)
-    (get-folder-modification-date folder)
+    (get-date)
     new-size
     (get-folder-security folder)
     (get-folder-shared-users folder)
@@ -132,7 +133,7 @@
     (get-folder-author folder)
     (get-folder-content folder)
     (get-folder-creation-date)
-    (get-folder-modification-date folder)
+    (get-date)
     (get-folder-size)
     new-security
     (get-folder-shared-users folder)
@@ -146,7 +147,7 @@
     (get-folder-author folder)
     (get-folder-content folder)
     (get-folder-creation-date)
-    (get-folder-modification-date folder)
+    (get-date)
     (get-folder-size)
     (get-folder-security folder)
     new-shared-users
@@ -160,7 +161,7 @@
     (get-folder-author folder)
     (get-folder-content folder)
     (get-folder-creation-date)
-    (get-folder-modification-date folder)
+    (get-date)
     (get-folder-size folder)
     (get-folder-security folder)
     (get-folder-shared-users folder)
@@ -174,7 +175,7 @@
     (get-folder-author folder)
     (get-folder-content folder)
     (get-folder-creation-date)
-    (get-folder-modification-date folder)
+    (get-date)
     (get-folder-size folder)
     (get-folder-security folder)
     (get-folder-shared-users)
@@ -188,7 +189,7 @@
     (get-folder-author folder)
     (get-folder-content folder)
     (get-folder-creation-date)
-    (get-folder-modification-date folder)
+    (get-date)
     (get-folder-size folder)
     (get-folder-security folder)
     (get-folder-password folder)
@@ -212,10 +213,17 @@
 
 (define (add-element-to-folder folder element)
   (set-folder-content folder 
-    (reverse (cons element (reverse get-folder-content folder)))))
+    (reverse (cons element (reverse (get-folder-content folder))))))
 
 
 (define (add-to-route-folder folder route element)
   (if (null? route)
     (add-element-to-folder folder element)
     (set-folder-content-by-name folder (car route) (add-to-route-folder (get-content-element-by-name (get-folder-content folder) (car route)) (cdr route) element))))
+
+(define folderlol
+ (make-folder null ":3" null null null null null null null null null))
+
+(define folderlol2
+  (set-folder-name folderlol ":3"))
+ (get-folder-content folderlol)

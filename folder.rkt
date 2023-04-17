@@ -1,13 +1,12 @@
 #lang racket
 (provide (all-defined-out))
-(require "element.rkt")
 (require "date.rkt")
-
+(require "content.rkt")
 ; Dom: string, string, list, date-string, date-string 
 ; Rec: 
 ; Descripción
 ; Recursión: No aplica
-(define (make-folder name author content creation-date modification-date size security shared-users encryption-fn decryption-fn password)
+(define (make-folder name author content creation-date modification-date encryption-fn decryption-fn password)
   (list 
     "folder"
     name
@@ -15,9 +14,6 @@
     content
     creation-date
     modification-date
-    size
-    security
-    shared-users
     encryption-fn
     decryption-fn
     password))
@@ -58,47 +54,27 @@
 (define (get-folder-modification-date folder)
   (cadddr (cddr folder)))
 
-; Dom: folder
-; Rec: 
-; Descripción
-; Recursión: No aplica
-(define (get-folder-size folder)
-  (cadddr (cdddr folder)))
-
-; Dom: folder
-; Rec: 
-; Descripción
-; Recursión: No aplica
-(define (get-folder-security folder)
-  (cadddr (cdddr (cdr folder))))
-
-; Dom: folder
-; Rec: 
-; Descripción
-; Recursión: No aplica
-(define (get-folder-shared-users folder)
-  (cadddr (cdddr (cddr folder))))
 
 ; Dom: folder
 ; Rec: 
 ; Descripción
 ; Recursión: No aplica
 (define (get-folder-encryption-fn folder)
-  (cadddr (cdddr (cdddr folder))))
+  (cadddr (cdddr folder)))
 
 ; Dom: folder
 ; Rec: 
 ; Descripción
 ; Recursión: No aplica
 (define (get-folder-decryption-fn folder)
-  (cadddr (cdddr (cdddr (cdr folder)))))
+  (cadddr (cdddr (cdr folder))))
 
 ; Dom: folder
 ; Rec: 
 ; Descripción
 ; Recursión: No aplica
 (define (get-folder-password folder)
-  (cadddr (cdddr (cdddr (cddr folder)))))
+  (cadddr (cdddr (cddr folder))))
 
 ; Dom: folder
 ; Rec: folder
@@ -111,9 +87,6 @@
     (get-folder-content folder)
     (get-folder-creation-date folder)
     (get-date)
-    (get-folder-size folder)
-    (get-folder-security folder)
-    (get-folder-shared-users folder)
     (get-folder-encryption-fn folder)
     (get-folder-decryption-fn folder)
     (get-folder-password folder)))
@@ -131,9 +104,6 @@
     (get-folder-content folder)
     (get-folder-creation-date folder)
     (get-date)
-    (get-folder-size folder)
-    (get-folder-security folder)
-    (get-folder-shared-users folder)
     (get-folder-encryption-fn folder)
     (get-folder-decryption-fn folder)
     (get-folder-password folder)))
@@ -149,9 +119,6 @@
     new-content
     (get-folder-creation-date folder)
     (get-date)
-    (get-folder-size folder)
-    (get-folder-security folder)
-    (get-folder-shared-users folder)
     (get-folder-encryption-fn folder)
     (get-folder-decryption-fn folder)
     (get-folder-password folder)))
@@ -168,66 +135,21 @@
     (get-folder-content folder)
     date
     (get-date)
-    (get-folder-size folder)
-    (get-folder-security folder)
-    (get-folder-shared-users folder)
     (get-folder-encryption-fn folder)
     (get-folder-decryption-fn folder)
     (get-folder-password folder)))
 
-; Dom: folder
-; Rec: folder
-; Descripción: cambia la fecha de modi
-; Recursión: No aplica
-(define (set-folder-size folder new-size)
+(define (set-folder-modification-date folder)
   (make-folder
     (get-folder-name folder)
     (get-folder-author folder)
     (get-folder-content folder)
-    (get-folder-creation-date)
+    (get-folder-creation-date folder)
     (get-date)
-    new-size
-    (get-folder-security folder)
-    (get-folder-shared-users folder)
     (get-folder-encryption-fn folder)
     (get-folder-decryption-fn folder)
     (get-folder-password folder)))
 
-; Dom: 
-; Rec: 
-; Descripción
-; Recursión: No aplica
-(define (set-folder-security folder new-security)
-  (make-folder
-    (get-folder-name folder)
-    (get-folder-author folder)
-    (get-folder-content folder)
-    (get-folder-creation-date)
-    (get-date)
-    (get-folder-size)
-    new-security
-    (get-folder-shared-users folder)
-    (get-folder-encryption-fn folder)
-    (get-folder-decryption-fn folder)
-    (get-folder-password folder)))
-
-; Dom: 
-; Rec: 
-; Descripción
-; Recursión: No aplica
-(define (set-folder-shared-users folder new-shared-users)
-  (make-folder
-    (get-folder-name folder)
-    (get-folder-author folder)
-    (get-folder-content folder)
-    (get-folder-creation-date)
-    (get-date)
-    (get-folder-size)
-    (get-folder-security folder)
-    new-shared-users
-    (get-folder-encryption-fn folder)
-    (get-folder-decryption-fn folder)
-    (get-folder-password folder)))
 
 ; Dom: folder x function
 ; Rec: folder
@@ -240,9 +162,6 @@
     (get-folder-content folder)
     (get-folder-creation-date)
     (get-date)
-    (get-folder-size folder)
-    (get-folder-security folder)
-    (get-folder-shared-users folder)
     new-encryption-fn
     (get-folder-decryption-fn folder)
     (get-folder-password folder)))
@@ -258,9 +177,6 @@
     (get-folder-content folder)
     (get-folder-creation-date)
     (get-date)
-    (get-folder-size folder)
-    (get-folder-security folder)
-    (get-folder-shared-users)
     (get-folder-encryption-fn folder)
     new-decryption-fn
     (get-folder-password folder)))
@@ -276,77 +192,37 @@
     (get-folder-content folder)
     (get-folder-creation-date)
     (get-date)
-    (get-folder-size folder)
-    (get-folder-security folder)
-    (get-folder-password folder)
     (get-folder-encryption-fn folder)
     (get-folder-decryption-fn folder)
     new-password))
 
-; Dom: folder-contents x string
-; Rec: element
-; Descripción: Retorna un elemento de los contenidos de la carpeta según su nombre
-; Recursión: natural
-(define (get-content-element-by-name folder name)
-  (if (null? folder)
-    null
-    (if (equal? name (get-folder-name (car folder)))
-      (car folder)
-      (get-content-element-by-name (cdr folder) name))))
 
-; Dom: folder-contents x string x element
-; Rec: folder-contents
-; Descripción: Reemplaza o modifica un elemento del contenido de la carpeta según su nombre
-; Recursión: No aplica
-(define (set-folder-content-by-name folder-contents name element)
-  (if (null? folder-contents)
-    folder-contents
-    (if (equal? name (get-element-name (car folder-contents)))
-      (cons element (cdr folder-contents))
-      (cons (car folder-contents) (set-folder-content-by-name (cdr folder-contents name element))))))
-
-; Dom: 
-; Rec: 
-; Descripción
-; Recursión: No aplica
-(define (add-element-to-folder folder element)
-  (set-folder-content folder 
-    (reverse (cons element (reverse (get-folder-content folder))))))
-
-(define (del-element-from-folder folder name)
-  (set-folder-content folder
-    (filter (lambda (x) (not (has-name? name x))) (get-folder-content folder))))
-
-; Dom: 
-; Rec: 
-; Descripción
-; Recursión: No aplica
 (define (add-to-route-folder folder route element)
   (if (null? route)
-    (add-element-to-folder folder element)
-    (set-folder-content-by-name folder (car route) (add-to-route-folder (get-content-element-by-name (get-folder-content folder) (car route)) (cdr route) element))))
+    (set-folder-content folder (add-element-to-content (get-folder-content folder) element))
+    (set-folder-content folder (set-content-by-name (get-folder-content folder) (car route) (add-to-route-folder (get-content-element-by-name (get-folder-content folder) (car route)) (cdr route) element)))))
 
 (define (del-from-route-folder folder route name)
   (if (null? route)
-    (del-element-from-folder folder name)
-    (set-folder-content-by-name folder (car route) (del-from-route-folder (get-content-element-by-name (get-folder-content folder) (car route)) (cdr route) name))))
+    (set-folder-content folder (del-element-from-content (get-folder-content folder) name))
+    (set-folder-content folder (set-content-by-name (get-folder-content folder) (car route) (del-from-route-folder (get-content-element-by-name (get-folder-content folder) (car route)) (cdr route) name)))))
 
 (define (get-from-route-folder folder route name)
   (if (null? route)
     (get-content-element-by-name (get-folder-content folder) name)
-    (get-from-route-folder (get-content-element-by-name (get-folder-content folder) (car route)) (cdr route) name))
-  )
-; Dom: 
-; Rec: 
-; Descripción
-; Recursión: No aplica
-(define folderlol
- (make-folder null ":3" null null null null null null null null null))
+    (get-from-route-folder (get-content-element-by-name (get-folder-content folder) (car route)) (cdr route) name)))
 
-; Dom: 
-; Rec: 
-; Descripción
-; Recursión: No aplica
-(define folderlol2
-  (set-folder-name folderlol ":3"))
- (get-folder-content folderlol)
+(define (ren-to-route-folder folder route filename new-name)
+  (if (null? route)
+    (set-folder-content folder (ren-element-from-content (get-folder-content folder) filename new-name))
+    (set-folder-content folder (set-content-by-name (get-folder-content folder) (car route) (ren-to-route-folder (get-content-element-by-name (get-folder-content folder) (car route)) (cdr route) filename new-name)))))
+
+(define (show-from-route-folder folder route params)
+  (if (null? route)
+  (cond 
+    [(member "/a" params) (show-content (get-all-names (get-folder-content folder)))]
+    [(member "/?" params) (display "Comandos disponibles:\n /s enseña los subdirectorios (no implementado)\n /a enseña los archivos ocultos \n /o enseña en orden (no implementado) \n /? enseña los comandos disponibles\n")]
+    [else (show-content (get-showable-names (get-folder-content folder)))])
+  (show-from-route-folder (get-content-element-by-name (get-folder-content folder) (car route)) (cdr route) params)
+    ))
+

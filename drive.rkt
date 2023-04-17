@@ -2,6 +2,7 @@
 (provide (all-defined-out))
 (require "folder.rkt")
 (require "element.rkt")
+(require "content.rkt")
 
 ; Dom: 
 ; Rec: 
@@ -82,75 +83,37 @@
     (get-drive-capacity drive)
     content))
 
-; Dom: 
-; Rec: 
-; Descripción
-; Recursión: No aplica
-(define (get-drive-element-by-name drive-contents name)
-  (if (null? drive-contents)
-    null
-    (if (equal? name (get-element-name (car drive-contents)))
-      (car drive-contents)
-      (get-drive-element-by-name (cdr drive-contents) name))))
-
-; Dom: 
-; Rec: 
-; Descripción
-; Recursión: No aplica
-(define (set-content-element-by-name drive-contents name element)
-  (if (null? drive-contents)
-    drive-contents
-    (if (equal? name (get-element-name (car drive-contents)))
-      (cons element (cdr drive-contents))
-      (cons (car drive-contents) (set-content-element-by-name (cdr drive-contents) name element)))))
-
-; Dom: 
-; Rec: 
-; Descripción
-; Recursión: No aplica
-(define (set-drive-contents-by-name drive name element)
-  (set-drive-content drive (set-content-element-by-name (get-drive-content drive) name element)))
-
-; Dom: 
-; Rec: 
-; Descripción
-; Recursión: No aplica
 (define (add-element-to-drive drive element)
-  (set-drive-content drive 
-  (reverse (cons element (reverse (get-drive-content drive))))))
-
-(define (del-from-drive-contents drive-contents name new-drive)
-  (if (null? drive-contents)
-    new-drive
-    (if (equal? name get-element-name (car drive-contents))
-      (del-from-drive-contents (cdr drive-contents) name new-drive)
-      (del-from-drive-contents (cdr drive-contents) name (reverse (cons (car drive-contents) (reverse new-drive)))))))
+    (set-drive-content drive (reverse (cons element (reverse (get-drive-content drive))))))
 
 
 
-(define (del-element-from-drive drive name)
-  (set-drive-content drive
-    (filter (lambda (x) (not (has-name? name x))) (get-drive-content drive)))
-  )
-
-; Dom: 
-; Rec: 
-; Descripción
-; Recursión: No aplica
 (define (add-to-route-drive drive route element)
   (if (null? route)
-    (add-element-to-drive drive element)
-    (set-drive-contents-by-name drive (car route) (add-to-route-folder (get-drive-element-by-name (get-drive-content drive) (car route)) (cdr route) element))))
+    (set-drive-content drive (add-element-to-content (get-drive-content drive) element))
+    (set-drive-content drive (set-content-by-name (get-drive-content drive) (car route) (add-to-route-folder (get-content-element-by-name (get-drive-content drive) (car route)) (cdr route) element)))))
 
 (define (del-from-route-drive drive route name)
   (if (null? route)
-    (del-element-from-drive drive name)
-    (set-drive-contents-by-name drive (car route) (del-from-route-folder (get-drive-element-by-name (get-drive-content drive) (car route)) (cdr route) name))))
+    (set-drive-content drive (del-element-from-content (get-drive-content drive) name))
+    (set-drive-content drive (set-content-by-name (get-drive-content drive) (car route) (del-from-route-folder (get-content-element-by-name (get-drive-content drive) (car route)) (cdr route) name)))))
 
 
 (define (get-from-route-drive drive route name)
   (if (null? route)
-    (get-drive-element-by-name (get-drive-content drive) name)
-    (get-from-route-folder (get-drive-element-by-name (get-drive-content drive) (car route)) (cdr route) name)))
+    (get-content-element-by-name (get-drive-content drive) name)
+    (get-from-route-folder (get-content-element-by-name (get-drive-content drive) (car route)) (cdr route) name)))
 
-(del-element-from-drive (list null null null (list (list null "bruh") (list null ":3") (list null ":000"))) ":3")
+(define (ren-to-route-drive drive route filename new-name)
+  (if (null? route)
+    (set-drive-content drive (ren-element-from-content (get-drive-content drive) filename new-name))
+    (set-drive-content drive (set-content-by-name (get-drive-content drive) (car route) (ren-to-route-folder (get-content-element-by-name (get-drive-content drive) (car route)) (cdr route) filename new-name)))))
+
+(define (show-from-route-drive drive route params)
+  (if (null? route)
+  (cond 
+    [(member "/a" params) (show-content (get-all-names (get-drive-content drive)))]
+    [(member "/?" params) (display "Comandos disponibles:\n /s enseña los subdirectorios (no implementado)\n /a enseña los archivos ocultos \n /o enseña en orden (no implementado) \n /? enseña los comandos disponibles\n")]
+    [else (show-content (get-showable-names (get-drive-content drive)))])
+  (show-from-route-folder (get-content-element-by-name (get-drive-content drive) (car route)) (cdr route) params)
+    ))

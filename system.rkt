@@ -80,7 +80,7 @@
     (get-system-actual-drive sys)
     (get-system-actual-route sys)
     (get-system-creation-date sys)
-    (get-system-modification-date sys)
+    (get-date)
     (get-system-trash sys)))
 
 ; Dom: 
@@ -96,7 +96,7 @@
    (get-system-actual-drive sys)
    (get-system-actual-route sys)
    (get-system-creation-date sys)
-   (get-system-modification-date sys)
+   (get-date)
    (get-system-trash sys)))
 
 ; Dom: 
@@ -112,7 +112,7 @@
    (get-system-actual-drive sys)
    (get-system-actual-route sys)
    (get-system-creation-date sys)
-   (get-system-modification-date sys)
+   (get-date)
    (get-system-trash sys)))
 
 ; Dom: 
@@ -128,7 +128,7 @@
    drive
    (get-system-actual-route sys)
    (get-system-creation-date sys)
-   (get-system-modification-date sys)
+   (get-date)
    (get-system-trash sys)))
 
 ; Dom: 
@@ -144,7 +144,7 @@
    (get-system-actual-drive sys)
    route
    (get-system-creation-date sys)
-   (get-system-modification-date sys)
+   (get-date)
    (get-system-trash sys))
   )
 
@@ -162,7 +162,7 @@
    (get-system-actual-drive sys)
    (get-system-actual-route sys)
    (get-date)
-   (get-system-modification-date sys)
+   (get-date)
    (get-system-trash sys)))
 
 ; Dom: 
@@ -195,5 +195,3 @@
 
 (define (add-to-trash sys element route)
   (set-system-trash sys (reverse (cons (list route element) (reverse (get-system-trash sys))))))
-
-

@@ -59,7 +59,7 @@
     drives
     (if (equal? letter (get-drive-letter (car drives)))
       (cons drive (cdr drives))
-      (cons (car drives) (set-drives-drive (cdr drives letter drive))))))
+      (cons (car drives) (set-drives-drive (cdr drives) letter drive)))))
 
 ; Dom: 
 ; Rec: 
@@ -81,5 +81,12 @@
     (get-from-route-drive (get-drive-by-letter drives (car route)) (cdr route) name)
     null))
 
-;;
-;; Rec: Bool
+(define (ren-to-route-drives drives route filename new-name)
+  (if (check-if-drive-exists drives (car route))
+    (ren-to-route-drive (get-drive-by-letter drives (car route)) (cdr route) filename new-name)
+    null))
+
+(define (show-from-route-drives drives route params)
+  (if (check-if-drive-exists drives (car route))
+    (show-from-route-drive (get-drive-by-letter drives (car route)) (cdr route) params)
+    null))

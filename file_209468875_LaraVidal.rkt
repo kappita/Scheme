@@ -1,6 +1,6 @@
 #lang racket
 (provide (all-defined-out))
-(require "date.rkt")
+(require "date_209468875_LaraVidal.rkt")
 
 ; Dom: name (string) x extensión (string) x content (string) x args (char) 
 ; Rec: file
@@ -8,7 +8,7 @@
 ; Recursión: No aplica
 (define (file name ext content . args)
     (list "file"
-      name
+      (string-downcase name)
       ext
       content
       (get-date)

@@ -1,1 +1,1 @@
-("8.8" ta6nt ("7241e9011d8e606be54d894b86ba7c238240e927" . "96c7ac98696b5f0ff6951d8c49e643492803b027") (collects #"drracket" #"private" #"drracket-errortrace-key.rkt") (collects #"racket" #"main.rkt") (collects #"racket" #"runtime-config.rkt"))
+("6.11" ("08bc5414640e05ebb4da6665b3b0909587783969" . "885ec922dbe4bbf594acaad0a5351e3eea4cdfcf") #"C:\\Users\\Kappappita\\Desktop\\lab1_20946887_Lara\\date.rkt" (collects #"errortrace" #"errortrace-key.rkt") (collects #"racket" #"main.rkt") (collects #"racket" #"runtime-config.rkt"))

@@ -1,6 +1,6 @@
 #lang racket
 (provide (all-defined-out))
-(require "element.rkt")
+(require "element_209468875_LaraVidal.rkt")
 
 ; Dom: contents x string
 ; Rec: element
@@ -51,35 +51,58 @@
                       (set-element-modification-date (set-element-name x new-name))
                       x)) contents)))
 
+; Dom: contents x string x función x función x string
+; Rec: contents
+; Descripción: Encripta un elemento  de cierto nombre
+; Recursión: No aplica
+(define (enc-element-from-content contents name enc-fn dec-fn password)
+  (if (member name (map (lambda (x) (get-element-name x)) contents))
+    (map (lambda (x) (if (has-name? name x)
+                        (encrypt-element x enc-fn dec-fn password)
+                        x)) contents)
+    contents))
 
+; Dom: contents x string x string
+; Rec: contents
+; Descripción: Desencripta un elemento de cierto nombre
+; Recursión: No aplica
+(define (dec-element-from-content contents name password)
+  (if (member name (map (lambda (x) (get-element-name x)) contents))
+    (map (lambda (x) (if (has-name? name x)
+                        (decrypt-element x password)
+                        x)) contents)
+    contents))
+
+; Dom: Content
+; Rec: list (string)
+; Descripción: Retorna una lista con el nombre de todos los elementos mostrables
+; Recursión: No aplica
 (define (get-showable-names content)
   (map (lambda (x) (string-append(get-element-name x) "\n")) (filter (lambda (x) (is-showable? x)) content)))
 
+; Dom:  content
+; Rec: list (string)
+; Descripción: Retorna una lista con el nombre de todos los elementos
+; Recursión: No aplica
 (define (get-all-names content)
   (map (lambda (x) (string-append (get-element-name x) "\n")) content))
 
-; Dom: contents
-; Rec: display 
-; Descripción: muestra los contenidos cuando sea posible
-; Recursión: No aplica
+; Dom: contents x string
+; Rec: string
+; Descripción: retorna los contenidos cuando sea posible
+; Recursión: cola
 
-(define (show-content names)
+(define (show-content names result)
   (if (null? names)
-      (display "")
-      (begin
-        (display (car names))
-        (show-content (cdr names)))))
+    result
+    (show-content (cdr names) (string-append result (car names)))))
 
+; Dom: contents x string x string
+; Rec: string
+; Descripción: Retorna las ocurrencias de un string en contenido
+; Recursión: cola
+(define (grep-content content match result)
+  (if (null? content)
+    result
+    (grep-content (cdr content) match (string-append result (grep-element (car content) match)))))
 
-
-;;(define (show-content content)
-  ;;(apply (lambda (x) (if (is-showable? x) (display (string-append (get-element-name x) "\n")) (display ""))) content))
-
-
-
-(display "bruh")
-(get-showable-names (list (list "file" ":3" null null null null (list #\c)) (list "file" "DDD:" null null null null null) (list "folder" ":DDDD" null null null)))
-(list (list "file" ":3" null null null null (list #\h)) (list "file" "DDD:" null null null null null))
-(show-content (get-showable-names (list (list "file" ":3" null null null null (list #\h)) (list "file" "DDD:" null null null null null) (list "folder" ":DDDD" null null null)))) 
-;;(define (show-content-sub content)
-;;  (map (lambda (x) ()) content))

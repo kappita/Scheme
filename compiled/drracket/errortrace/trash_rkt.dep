@@ -1,0 +1,1 @@
+("6.11" ("d2b8452f9642190f51a80472d5e1a5718b8e575a" . "15a059bf3b401b27de5629264eebed625f5139e8") #"C:\\Users\\Kappappita\\Desktop\\lab1_20946887_Lara\\date.rkt" #"C:\\Users\\Kappappita\\Desktop\\lab1_20946887_Lara\\element.rkt" (collects #"errortrace" #"errortrace-key.rkt") (collects #"racket" #"main.rkt") (collects #"racket" #"runtime-config.rkt"))
